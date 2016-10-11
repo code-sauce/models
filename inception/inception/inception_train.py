@@ -36,7 +36,7 @@ FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('train_dir', '/tmp/imagenet_train',
                            """Directory where to write event logs """
                            """and checkpoint.""")
-tf.app.flags.DEFINE_integer('max_steps', 10000000,
+tf.app.flags.DEFINE_integer('max_steps', 101,
                             """Number of batches to run.""")
 tf.app.flags.DEFINE_string('subset', 'train',
                            """Either 'train' or 'validation'.""")
@@ -220,7 +220,7 @@ def train(dataset):
     # Number of classes in the Dataset label set plus 1.
     # Label 0 is reserved for an (unused) background class.
     num_classes = dataset.num_classes() + 1
-    
+
      # Split the batch of images and labels for towers.
     images_splits = tf.split(0, FLAGS.num_gpus, images)
     labels_splits = tf.split(0, FLAGS.num_gpus, labels)
@@ -350,6 +350,11 @@ def train(dataset):
         summary_writer.add_summary(summary_str, step)
 
       # Save the model checkpoint periodically.
-      if step % 5000 == 0 or (step + 1) == FLAGS.max_steps:
+      if step % 100 == 0 or (step + 1) == FLAGS.max_steps:
         checkpoint_path = os.path.join(FLAGS.train_dir, 'model.ckpt')
         saver.save(sess, checkpoint_path, global_step=step)
+    from tensorflow.python.lib.io import file_io
+    graph_def=sess.graph.as_graph_def(add_shapes=True)
+    graph_path = 'model.pb'
+    file_io.write_string_to_file(graph_path, str(graph_def))
+    file_io.write_string_to_file(graph_path+'.txt', graph_def.SerializeToString())

@@ -18,6 +18,8 @@ import time
 
 import tensorflow as tf
 
+tf.Variable
+
 import data_utils
 
 

@@ -136,6 +136,17 @@ py_library(
 )
 
 py_library(
+    name = "sr_train",
+    srcs = [
+        "sr_train.py",
+    ],
+    deps = [
+        ":image_processing",
+        ":inception",
+    ],
+)
+
+py_library(
     name = "inception_distributed_train",
     srcs = [
         "inception_distributed_train.py",

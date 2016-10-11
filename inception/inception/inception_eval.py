@@ -163,6 +163,11 @@ def evaluate(dataset):
     graph_def = tf.get_default_graph().as_graph_def()
     summary_writer = tf.train.SummaryWriter(FLAGS.eval_dir,
                                             graph_def=graph_def)
+    from tensorflow.python.lib.io import file_io
+
+    graph_path = 'model_eval.pb'
+    file_io.write_string_to_file(graph_path, str(graph_def))
+    file_io.write_string_to_file(graph_path+'.txt', graph_def.SerializeToString())
 
     while True:
       _eval_once(saver, summary_writer, top_1_op, top_5_op, summary_op)
