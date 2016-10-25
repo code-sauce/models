@@ -2,5 +2,3 @@ bags
 dresses
 shoes
 tops
-
-
